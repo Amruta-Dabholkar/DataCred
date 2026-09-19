@@ -58,13 +58,13 @@ The four scores combine into one weighted overall trust score (0–100), with a 
 <td width="50%">
 
 **Trust score breakdown**
-![Trust score breakdown](screenshots/03_custom_csv_upload_result.png)
+![Trust score breakdown](screenshots/custom_csv_upload_result.png)
 
 </td>
 <td width="50%">
 
 **Plain-English report**
-![Plain-English report](screenshots/04_plain_english_report_upload.png)
+![Plain-English report](screenshots/plain_english_report_upload.png)
 
 </td>
 </tr>
@@ -72,13 +72,13 @@ The four scores combine into one weighted overall trust score (0–100), with a 
 <td width="50%">
 
 **Completeness & drift detail**
-![Completeness and drift detail](screenshots/06_completeness_and_drift_detail.png)
+![Completeness and drift detail](screenshots/completeness_and_drift_detail.png)
 
 </td>
 <td width="50%">
 
 **High-trust dataset example**
-![High trust result](screenshots/07_demo_data_high_trust_result.png)
+![High trust result](screenshots/demo_data_high_trust_result.png)
 
 </td>
 </tr>
