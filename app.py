@@ -286,15 +286,33 @@ html, body, [class*="css"]  { font-family: 'Inter', sans-serif; }
 section[data-testid="stSidebar"] {
     background: linear-gradient(180deg, #0B2E6F 0%, #123A8C 100%);
 }
-section[data-testid="stSidebar"] * { color: #EAF1FF !important; }
+/* Default sidebar text: light, for readability on the navy background */
+section[data-testid="stSidebar"] label,
+section[data-testid="stSidebar"] p,
+section[data-testid="stSidebar"] span,
+section[data-testid="stSidebar"] h1,
+section[data-testid="stSidebar"] h2,
+section[data-testid="stSidebar"] h3 { color: #EAF1FF; }
+
 section[data-testid="stSidebar"] h2 {
     font-size: 12px; text-transform: uppercase; letter-spacing: 1.2px;
-    color: #9FC1FF !important; font-weight: 700; margin-top: 4px;
+    color: #9FC1FF; font-weight: 700; margin-top: 4px;
 }
-section[data-testid="stSidebar"] .stRadio label,
-section[data-testid="stSidebar"] .stSelectbox label,
-section[data-testid="stSidebar"] .stTextInput label { color: #D7E6FF !important; }
 section[data-testid="stSidebar"] hr { border-color: rgba(255,255,255,0.15); }
+
+/* File uploader renders its own white dropzone — keep its text dark so it stays readable */
+section[data-testid="stSidebar"] [data-testid="stFileUploaderDropzone"],
+section[data-testid="stSidebar"] [data-testid="stFileUploaderDropzone"] * {
+    color: #0B2E6F !important;
+}
+section[data-testid="stSidebar"] [data-testid="stFileUploaderDropzone"] button {
+    background: #EAF1FF !important; color: #0B2E6F !important; border: 1px solid #B7CCF2 !important;
+}
+/* Text input / selectbox inner boxes also render light — keep their text dark */
+section[data-testid="stSidebar"] input,
+section[data-testid="stSidebar"] [data-baseweb="select"] * {
+    color: #0B2E6F !important;
+}
 
 /* Buttons */
 .stButton>button, .stDownloadButton>button {
