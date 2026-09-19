@@ -271,8 +271,73 @@ def explain(dataset_name, overall_score, label, completeness, freshness, source,
 
 st.set_page_config(page_title="DataCred — Data Trust Score", page_icon="🏷️", layout="wide")
 
-st.title("🏷️ DataCred")
-st.caption("A nutrition label for datasets — a 0–100 trust score backed by four transparent checks.")
+# ---------------------------------------------------------------------------
+# Blue theme — custom CSS on top of .streamlit/config.toml
+# ---------------------------------------------------------------------------
+st.markdown("""
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+html, body, [class*="css"]  { font-family: 'Inter', sans-serif; }
+
+.stApp { background: linear-gradient(180deg, #F4F8FF 0%, #FFFFFF 320px); }
+
+/* Sidebar */
+section[data-testid="stSidebar"] {
+    background: linear-gradient(180deg, #0B2E6F 0%, #123A8C 100%);
+}
+section[data-testid="stSidebar"] * { color: #EAF1FF !important; }
+section[data-testid="stSidebar"] h2 {
+    font-size: 12px; text-transform: uppercase; letter-spacing: 1.2px;
+    color: #9FC1FF !important; font-weight: 700; margin-top: 4px;
+}
+section[data-testid="stSidebar"] .stRadio label,
+section[data-testid="stSidebar"] .stSelectbox label,
+section[data-testid="stSidebar"] .stTextInput label { color: #D7E6FF !important; }
+section[data-testid="stSidebar"] hr { border-color: rgba(255,255,255,0.15); }
+
+/* Buttons */
+.stButton>button, .stDownloadButton>button {
+    background: linear-gradient(90deg, #2563EB, #1D4ED8);
+    color: #FFFFFF; border: none; font-weight: 700; letter-spacing: 0.2px;
+    border-radius: 8px; padding: 0.6em 1em;
+}
+.stButton>button:hover, .stDownloadButton>button:hover {
+    background: linear-gradient(90deg, #1D4ED8, #1E3A8A); color: #FFFFFF;
+}
+
+/* Header banner */
+.dc-hero {
+    background: linear-gradient(120deg, #0B2E6F 0%, #2563EB 100%);
+    color: #FFFFFF; padding: 28px 32px; border-radius: 16px; margin-bottom: 24px;
+    box-shadow: 0 8px 24px rgba(11,46,111,0.18);
+}
+.dc-hero h1 { margin: 0 0 4px 0; font-size: 30px; font-weight: 800; letter-spacing: -0.5px; }
+.dc-hero p { margin: 0; color: #CFE0FF; font-size: 15px; }
+
+/* Score card */
+.dc-score-card {
+    background: #FFFFFF; border: 1px solid #DCE7FA; border-radius: 16px;
+    padding: 22px 26px; box-shadow: 0 6px 18px rgba(37,99,235,0.08);
+}
+.dc-score-num { font-size: 52px; font-weight: 800; color: #0B2E6F; line-height: 1; }
+.dc-score-label { font-size: 15px; font-weight: 700; margin-top: 6px; }
+
+/* Expanders / info boxes */
+.streamlit-expanderHeader { font-weight: 600; color: #0B2E6F; }
+div[data-testid="stMetricValue"] { color: #0B2E6F; }
+
+/* Code / report block */
+pre, code { background: #EEF4FF !important; }
+</style>
+""", unsafe_allow_html=True)
+
+st.markdown("""
+<div class="dc-hero">
+  <h1>🏷️ DataCred</h1>
+  <p>A nutrition label for datasets — a 0–100 trust score backed by four transparent checks.</p>
+</div>
+""", unsafe_allow_html=True)
 
 with st.sidebar:
     st.header("1. Choose your data")
@@ -331,23 +396,48 @@ if run:
     overall_score, label = compute_trust_score(completeness_result, freshness_result, source_result, drift_result, weights)
     report_text = explain(dataset_name, overall_score, label, completeness_result, freshness_result, source_result, drift_result)
 
-    band_color = "#2ecc71" if overall_score >= 65 else "#f1c40f" if overall_score >= 40 else "#e74c3c"
+    # Blue-shade band coloring: deeper, more saturated blue = higher trust
+    band_color = "#1D4ED8" if overall_score >= 65 else "#5B8DEF" if overall_score >= 40 else "#9DB8E8"
 
     col1, col2 = st.columns([1, 2])
     with col1:
-        st.metric("Overall Trust Score", f"{overall_score} / 100")
-        st.markdown(f"<span style='color:{band_color}; font-weight:600'>{label}</span>", unsafe_allow_html=True)
+        st.markdown(f"""
+        <div class="dc-score-card">
+            <div style="font-size:13px; font-weight:700; color:#5B7BB8; text-transform:uppercase; letter-spacing:1px;">
+                Overall Trust Score
+            </div>
+            <div class="dc-score-num">{overall_score}<span style="font-size:20px; color:#5B7BB8;">/100</span></div>
+            <div class="dc-score-label" style="color:{band_color};">{label}</div>
+        </div>
+        """, unsafe_allow_html=True)
 
     with col2:
         labels_ = ["Completeness", "Freshness", "Source\nReliability", "Drift"]
         scores_ = [completeness_result.score, freshness_result.score, source_result.score, drift_result.score]
-        colors_ = ["#2ecc71" if s >= 70 else "#f1c40f" if s >= 40 else "#e74c3c" for s in scores_]
+        # Monochromatic blue scale: darker navy = stronger score, pale blue = weaker
+        blue_scale = ["#0B2E6F", "#2563EB", "#7FA8E8", "#C7DAF7"]
+        colors_ = []
+        for s in scores_:
+            if s >= 85: colors_.append(blue_scale[0])
+            elif s >= 65: colors_.append(blue_scale[1])
+            elif s >= 40: colors_.append(blue_scale[2])
+            else: colors_.append(blue_scale[3])
+
         fig, ax = plt.subplots(figsize=(7, 3.2))
-        bars = ax.bar(labels_, scores_, color=colors_)
+        fig.patch.set_facecolor("#FFFFFF")
+        ax.set_facecolor("#FFFFFF")
+        bars = ax.bar(labels_, scores_, color=colors_, width=0.55, zorder=3)
         ax.set_ylim(0, 100)
-        ax.set_ylabel("Score (0-100)")
+        ax.set_ylabel("Score (0-100)", color="#0B2E6F", fontweight="bold")
+        ax.tick_params(colors="#0B2E6F")
+        for spine in ["top", "right"]:
+            ax.spines[spine].set_visible(False)
+        for spine in ["left", "bottom"]:
+            ax.spines[spine].set_color("#C7DAF7")
+        ax.yaxis.grid(True, color="#E4ECFB", zorder=0)
         for bar, s in zip(bars, scores_):
-            ax.text(bar.get_x() + bar.get_width() / 2, s + 2, f"{s}", ha="center", fontweight="bold")
+            ax.text(bar.get_x() + bar.get_width() / 2, s + 2.5, f"{s}", ha="center",
+                     fontweight="bold", color="#0B2E6F")
         st.pyplot(fig)
 
     st.subheader("Plain-English report")
