@@ -1,9 +1,11 @@
 # DataCred — A "Nutrition Label" for Datasets
 
 **Program:** IBM SkillsBuild Data Analytics with AI Academic Internship (BharatCares × AICTE)
-**Author:** Amruta
+**Author:** Amruta Dabholkar
 
-**Live demo:** _add your Streamlit Community Cloud link here once deployed (see below)_
+**Live demo:** https://datacred.streamlit.app/
+
+![Trust score breakdown](screenshots/03_custom_csv_upload_result.png)
 
 ## Project Description
 
