@@ -5,6 +5,8 @@
 
 **Live demo:** https://datacred.streamlit.app/
 
+![Trust score breakdown](screenshots/03_custom_csv_upload_result.png)
+
 ## Project Description
 
 Before a dataset is used to train a model or drive a business decision, it
